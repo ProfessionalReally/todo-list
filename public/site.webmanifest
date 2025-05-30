@@ -1,6 +1,6 @@
 {
   "name": "TodoList",
-  "short_name": "Todo",
+  "short_name": "todo",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
