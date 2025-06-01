@@ -1,0 +1,67 @@
+
+.header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  background-color: var(--color-gray-700);
+
+  &__panel {
+    position: absolute;
+    max-width: 736px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    bottom: -100px;
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    height: 54px;
+  }
+
+  &__button {
+    &--filter {
+      background-color: var(--color-purple-dark);
+    }
+
+    &--filter:hover {
+      background-color: color-mix(in srgb, var(--color-purple-dark) 80%, black);
+    }
+
+    &:active {
+      scale: 0.98;
+    }
+
+    &--create {
+      background-color: var(--color-blue-dark);
+    }
+
+    &--create:hover {
+      background-color: color-mix(in srgb, var(--color-blue-dark) 80%, black);
+    }
+  }
+
+  &__form {
+    flex: 1 0 auto;
+    display: flex;
+    gap: 8px;
+    height: 100%;
+  }
+
+  &__input-create {
+    flex: 1 0 auto;
+  }
+
+  &__search {
+    height: 40px;
+  }
+
+
+}
+

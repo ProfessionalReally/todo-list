@@ -1,0 +1,43 @@
+.todos {
+  max-width: 736px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin: 0 auto;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__info-title {
+    font-size: 14px;
+    font-weight: 700;
+
+    &--created {
+      color: var(--color-blue);
+    }
+
+    &--completed {
+      color: var(--color-purple);
+    }
+  }
+
+  &__info-count {
+    background-color: var(--color-gray-400);
+    padding: 3px 8px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-gray-200);
+  }
+
+}

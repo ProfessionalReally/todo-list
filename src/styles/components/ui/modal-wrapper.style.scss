@@ -1,0 +1,47 @@
+.modal {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: var(--color-gray-600);
+  border-radius: 8px;
+  padding: 16px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 5px 30px rgba(#5e60ce, .2);
+  outline: none;
+
+  &__overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    overflow: hidden;
+    overflow-y: auto;
+  }
+
+  &__close-button {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 20px;
+    height: 20px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+
+    svg {
+      transition: stroke 0.1s ease-in-out;
+    }
+
+    &:hover {
+      svg {
+        stroke: var(--color-gray-100);
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 100%;
+  border: none;
+  border-radius: 8px;
+  padding: 16px;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 140%;
+  color: var(--color-gray-100);
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, scale 0.1s ease-in-out;
+
+  &:active {
+    scale: 0.98;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+}
