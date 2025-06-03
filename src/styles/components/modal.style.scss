@@ -1,0 +1,74 @@
+.modal {
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  &__title--text {
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 140%;
+    text-align: center;
+  }
+
+  &__edit-input {
+    height: 50px;
+  }
+
+  &__text {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 140%;
+    text-align: center;
+
+    &--danger {
+      font-weight: 700;
+      font-size: 16px;
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  &__button {
+    height: 45px;
+
+
+    &--primary {
+      background-color: var(--color-blue-dark);
+    }
+
+    &--primary:hover {
+      background-color: color-mix(in srgb, var(--color-blue-dark) 80%, black);
+    }
+
+    &--danger {
+      background-color: var(--color-danger);
+    }
+
+    &--danger:hover {
+      background-color: color-mix(in srgb, var(--color-danger) 80%, black);
+    }
+
+    &--light {
+      background-color: var(--color-gray-500);
+    }
+
+    &--light:hover {
+      background-color: color-mix(in srgb, var(--color-gray-500) 80%, white);
+    }
+
+  }
+}

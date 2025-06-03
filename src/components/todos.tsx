@@ -1,7 +1,24 @@
 import '../styles/components/todos.style.scss';
-import { TodoList } from './todo-list.tsx';
+import { TodoList } from './todo-list';
+import type { Todo } from '../types';
+import React, { useMemo } from 'react';
 
-export const Todos = () => {
+type TodosProps = {
+	todos: Todo[];
+	updateTodo: (id: string, updatedFields: Partial<Todo>) => void;
+	deleteTodo: (id: string) => void;
+};
+
+export const Todos: React.FC<TodosProps> = ({
+	todos,
+	updateTodo,
+	deleteTodo,
+}) => {
+	const completedTodos = useMemo(
+		() => todos.filter((todo) => todo.completed),
+		[todos],
+	);
+
 	return (
 		<section className={'todos'}>
 			<div className={'todos__header'}>
@@ -13,7 +30,7 @@ export const Todos = () => {
 					>
 						Created task
 					</p>
-					<span className={'todos__info-count'}>5</span>
+					<span className={'todos__info-count'}>{todos.length}</span>
 				</div>
 				<div className={'todos__info'}>
 					<p
@@ -23,10 +40,16 @@ export const Todos = () => {
 					>
 						Completed
 					</p>
-					<span className={'todos__info-count'}>2 of 5</span>
+					<span className={'todos__info-count'}>
+						{completedTodos.length} of {todos.length}
+					</span>
 				</div>
 			</div>
-			<TodoList />
+			<TodoList
+				todos={todos}
+				updateTodo={updateTodo}
+				deleteTodo={deleteTodo}
+			/>
 		</section>
 	);
 };

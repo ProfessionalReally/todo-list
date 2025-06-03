@@ -3,6 +3,8 @@ import React from 'react';
 import '../../styles/components/ui/modal-wrapper.style.scss';
 import { X } from 'lucide-react';
 
+Modal.setAppElement('#root');
+
 type ModalProps = {
 	children: React.ReactNode;
 	isOpen: boolean;
@@ -14,11 +16,13 @@ export const ModalWrapper: React.FC<ModalProps> = ({
 	children,
 	isOpen,
 	onClose,
+	contentLabel,
 }) => {
 	return (
 		<Modal
 			isOpen={isOpen}
 			onRequestClose={onClose}
+			contentLabel={contentLabel || 'Modal'}
 			className='modal'
 			overlayClassName='modal__overlay'
 		>
