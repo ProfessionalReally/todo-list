@@ -5,16 +5,16 @@ import {
 	useRequestUpdateTodo,
 } from './use-request';
 import type { Todo } from '../types';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 
 export const useTodos = () => {
-	const { todos, isLoading, errorGet, setTodos } = useRequestGetTodos();
-	const { requestPostTodo, isCreating, errorPost } =
-		useRequestPostTodo(setTodos);
-	const { requestDeleteTodo, isDeleting, errorDelete } =
-		useRequestDeleteTodo(setTodos);
-	const { requestUpdateTodo, isUpdating, errorUpdate } =
-		useRequestUpdateTodo(setTodos);
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState<Error | null>(null);
+
+	const { todos } = useRequestGetTodos(setIsLoading, setError);
+	const { requestPostTodo } = useRequestPostTodo(setIsLoading, setError);
+	const { requestDeleteTodo } = useRequestDeleteTodo(setIsLoading, setError);
+	const { requestUpdateTodo } = useRequestUpdateTodo(setIsLoading, setError);
 
 	const addTodo = useCallback((title: string) => {
 		requestPostTodo(title);
@@ -25,7 +25,7 @@ export const useTodos = () => {
 			const todo = todos.find((todo) => todo.id === id);
 			todo
 				? requestUpdateTodo(id, updatedFields)
-				: console.warn('Todo not found');
+				: console.log('Todo not found');
 		},
 		[todos],
 	);
@@ -33,19 +33,14 @@ export const useTodos = () => {
 	const deleteTodo = useCallback(
 		(id: string) => {
 			const todo = todos.find((todo) => todo.id === id);
-			todo ? requestDeleteTodo(id) : console.warn('Todo not found');
+			todo ? requestDeleteTodo(id) : console.log('Todo not found');
 		},
 		[todos],
 	);
 
-	const error = errorGet || errorPost || errorDelete || errorUpdate;
-
 	return {
 		todos,
 		isLoading,
-		isCreating,
-		isDeleting,
-		isUpdating,
 		error,
 		updateTodo,
 		deleteTodo,

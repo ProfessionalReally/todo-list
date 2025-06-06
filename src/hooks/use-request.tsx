@@ -1,95 +1,120 @@
 import React, { useEffect, useState } from 'react';
 import type { Todo } from '../types';
-import { deleteTodo, getTodos, postTodo, updateTodo } from '../services';
+import { db } from '../services/firebase';
+import { ref, onValue, push, remove, update } from 'firebase/database';
 
-type AsyncFunction<T> = () => Promise<T>;
+const PATH_TODOS = 'todos';
 
-const useRequest = () => {
-	const [isLoading, setIsLoading] = useState(false);
-	const [error, setError] = useState<Error | null>(null);
-
-	const request = async (asyncFn: AsyncFunction<Todo[] | Todo>) => {
-		setIsLoading(true);
-		setError(null);
-		try {
-			return await asyncFn();
-		} catch (error: Error | unknown) {
-			console.error(error);
-			setError(error as Error);
-		} finally {
-			setIsLoading(false);
-		}
-	};
-
-	return { isLoading, error, request };
-};
-
-export const useRequestGetTodos = () => {
+export const useRequestGetTodos = (
+	setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
+	setError: React.Dispatch<React.SetStateAction<Error | null>>,
+) => {
 	const [todos, setTodos] = useState<Todo[]>([]);
-	const { request, isLoading, error: errorGet } = useRequest();
 
 	useEffect(() => {
-		request(async () => {
-			return await getTodos();
-		}).then((data: Todo[] | Todo | undefined) => {
-			if (data) setTodos(data as Todo[]);
-		});
+		setIsLoading(true);
+
+		return onValue(
+			ref(db, PATH_TODOS),
+			(snapshot) => {
+				setError(null);
+				if (snapshot.exists()) {
+					const data = Object.entries(snapshot.val()).map(
+						([id, todo]) => {
+							return {
+								id,
+								...(todo as Omit<Todo, 'id'>),
+							};
+						},
+					);
+					setTodos(data);
+				} else {
+					setTodos([]);
+				}
+				setIsLoading(false);
+			},
+			(error) => {
+				console.log('Failed to get todos', error);
+				setError(error);
+				setIsLoading(false);
+			},
+		);
 	}, []);
 
-	return { todos, isLoading, errorGet, setTodos };
+	return { todos };
 };
 
 export const useRequestPostTodo = (
-	setTodos: React.Dispatch<React.SetStateAction<Todo[]>>,
+	setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
+	setError: React.Dispatch<React.SetStateAction<Error | null>>,
 ) => {
-	const { request, isLoading: isCreating, error: errorPost } = useRequest();
-	const requestPostTodo = async (title: string) => {
-		request(async () => {
-			return await postTodo(title);
-		}).then((data: Todo[] | Todo | undefined) => {
-			if (data) setTodos((prev: Todo[]) => [...prev, data as Todo]);
-		});
+	const [isCreating, setIsCreating] = useState(false);
+
+	const requestPostTodo = (title: string) => {
+		setIsLoading(true);
+		setIsCreating(true);
+		setError(null);
+
+		push(ref(db, PATH_TODOS), { title, completed: false })
+			.catch((error: Error) => {
+				console.log('Failed to create todo', error);
+				setError(error as Error);
+			})
+			.finally(() => {
+				setIsLoading(false);
+				setIsCreating(false);
+			});
 	};
 
-	return { requestPostTodo, isCreating, errorPost };
+	return { isCreating, requestPostTodo };
 };
 
 export const useRequestDeleteTodo = (
-	setTodos: React.Dispatch<React.SetStateAction<Todo[]>>,
+	setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
+	setError: React.Dispatch<React.SetStateAction<Error | null>>,
 ) => {
-	const { request, isLoading: isDeleting, error: errorDelete } = useRequest();
+	const [isDeleting, setIsDeleting] = useState(false);
 
-	const requestDeleteTodo = async (id: string) => {
-		request(async () => {
-			return await deleteTodo(id);
-		}).then((data: Todo[] | Todo | undefined) => {
-			if (data)
-				setTodos((prev: Todo[]) =>
-					prev.filter((todo) => todo.id !== id),
-				);
-		});
+	const requestDeleteTodo = (id: string) => {
+		setIsLoading(true);
+		setIsDeleting(true);
+		setError(null);
+
+		remove(ref(db, `${PATH_TODOS}/${id}`))
+			.catch((error: Error) => {
+				console.log('Failed to delete todo', error);
+				setError(error as Error);
+			})
+			.finally(() => {
+				setIsLoading(false);
+				setIsDeleting(false);
+			});
 	};
 
-	return { requestDeleteTodo, isDeleting, errorDelete };
+	return { isDeleting, requestDeleteTodo };
 };
 
 export const useRequestUpdateTodo = (
-	setTodos: React.Dispatch<React.SetStateAction<Todo[]>>,
+	setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
+	setError: React.Dispatch<React.SetStateAction<Error | null>>,
 ) => {
-	const { request, isLoading: isUpdating, error: errorUpdate } = useRequest();
+	const [isUpdating, setIsUpdating] = useState(false);
 
-	const requestUpdateTodo = async (
-		id: string,
-		updatedFields: Partial<Todo>,
-	) => {
-		request(async () => {
-			return await updateTodo(id, updatedFields);
-		}).then(() => {
-			setTodos((prev: Todo[]) =>
-				prev.map((t) => (t.id === id ? { ...t, ...updatedFields } : t)),
-			);
-		});
+	const requestUpdateTodo = (id: string, updatedFields: Partial<Todo>) => {
+		setIsLoading(true);
+		setIsUpdating(true);
+		setError(null);
+
+		update(ref(db, `${PATH_TODOS}/${id}`), updatedFields)
+			.catch((error: Error) => {
+				console.log('Failed to update todo', error);
+				setError(error as Error);
+			})
+			.finally(() => {
+				setIsUpdating(false);
+				setIsLoading(false);
+			});
 	};
 
-	return { requestUpdateTodo, isUpdating, errorUpdate };
+	return { isUpdating, requestUpdateTodo };
 };
