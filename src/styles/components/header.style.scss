@@ -26,6 +26,8 @@
   }
 
   &__button {
+    transition: background-color 0.1s ease-in-out, scale 0.1s ease-in-out;
+
     &--filter {
       background-color: var(--color-purple-dark);
     }

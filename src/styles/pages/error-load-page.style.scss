@@ -1,0 +1,49 @@
+.error-load-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: auto 0;
+  }
+
+  &__title {
+    font-weight: 700;
+    font-size: 50px;
+    line-height: 140%;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  &__buttons {
+    margin-top: 16px;
+    display: flex;
+    gap: 16px;
+  }
+
+  &__button {
+    transition: background-color 0.2s ease-in-out;
+
+    &--home {
+      background: var(--color-purple-dark-80);
+    }
+
+    &--home:hover {
+      background: var(--color-purple-dark);
+    }
+
+    &--retry {
+      background: var(--color-blue-dark-80);
+    }
+
+    &--retry:hover {
+      background: var(--color-blue-dark);
+    }
+  }
+}

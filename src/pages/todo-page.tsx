@@ -1,68 +1,117 @@
+import { useNavigate, useParams } from 'react-router-dom';
+import { useCallback, useEffect } from 'react';
+import { deleteTodo, updateTodo } from '../services';
 import { Header } from '../components/header';
-import { Todos } from '../components/todos';
+import { ArrowLeft } from 'lucide-react';
+import { Icon } from '../components/ui/icon';
 import '../styles/pages/todo-page.style.scss';
+import { TodoCard } from '../components/todo-card';
+import { EditModal } from '../components/edit-modal';
+import { DeleteModal } from '../components/delete-modal';
+import { useRequestGetTodo } from '../hooks/use-request';
+import { useModal } from '../hooks/use-modal';
 import { Spinner } from '../components/ui/spinner';
-import { Error } from '../components/ui/error';
-import { useTodos } from '../hooks/use-todos';
-import React, { useMemo, useState } from 'react';
-import { useDebounce } from '../hooks/use-debounce.tsx';
 
-export const TodoPage = () => {
-	const [query, setQuery] = useState<string>('');
-	const [sortAsc, setSortAsc] = useState<boolean | null>(null);
+const TodoPage = () => {
+	const { id } = useParams<string>();
+	const navigate = useNavigate();
 
-	const { todos, isLoading, error, updateTodo, deleteTodo, addTodo } =
-		useTodos();
+	useEffect(() => {
+		if (!id) {
+			navigate('/404');
+		}
+	}, [id, navigate]);
 
-	const debouncedQuery = useDebounce(query, 500);
+	const { todo, isTimeout, hasFetched, isLoading, setTodo } =
+		useRequestGetTodo(id!);
 
-	const searchedTodos = useMemo(() => {
-		if (!query.trim()) return todos;
-		return (
-			todos.filter((todo) =>
-				todo.title.toLowerCase().includes(debouncedQuery.toLowerCase()),
-			) || []
-		);
-	}, [todos, debouncedQuery]);
+	useEffect(() => {
+		if (isTimeout) {
+			navigate('/load-error');
+		} else if (hasFetched && !todo) {
+			navigate('/404');
+		}
+	}, [todo, isLoading, isTimeout, navigate]);
 
-	const sortedTodos = useMemo(() => {
-		return [...searchedTodos].sort((a, b) => {
-			if (sortAsc === null) return 0;
-			if (sortAsc) return a.title.localeCompare(b.title);
-			return b.title.localeCompare(a.title);
-		});
-	}, [searchedTodos, sortAsc]);
+	const {
+		isModalOpen,
+		editTitle,
+		openEditModal,
+		openDeleteModal,
+		handleEditInputChange,
+		checkModalType,
+		closeModal,
+	} = useModal();
 
-	const onChangeQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setQuery(event.target.value);
-	};
+	const handleUpdateTodo = useCallback(() => {
+		if (id && editTitle) {
+			updateTodo(id, { title: editTitle })
+				.then(setTodo)
+				.catch(console.error)
+				.finally(closeModal);
+		}
+	}, [id, editTitle, closeModal]);
 
-	const onToggleSort = () => {
-		setSortAsc((prev) => {
-			if (prev === null) return true;
-			if (prev) return false;
-			return null;
-		});
-	};
+	const handleDeleteTodo = useCallback(() => {
+		if (id) {
+			deleteTodo(id)
+				.catch(console.error)
+				.finally(() => {
+					closeModal();
+					navigate('/');
+				});
+		}
+	}, [id, closeModal]);
+
+	const handleClickBack = useCallback(() => {
+		navigate(-1);
+	}, [navigate]);
+
+	if (!todo) return null;
 
 	return (
-		<div className={'todo-page'}>
-			<Header
-				addTodo={addTodo}
-				onChangeQuery={onChangeQuery}
-				onToggleSort={onToggleSort}
-				query={query}
-				sortAsc={sortAsc}
-			/>
-			{isLoading && <Spinner />}
-			{error && <Error>{error.message}</Error>}
-			{!isLoading && !error && (
-				<Todos
-					todos={sortedTodos}
-					updateTodo={updateTodo}
-					deleteTodo={deleteTodo}
+		<>
+			<div className={'todo-page'}>
+				<Header />
+				{isLoading && <Spinner />}
+				<div className={'todo-page__content'}>
+					<button
+						className={'todo-page__back-button'}
+						onClick={handleClickBack}
+					>
+						<Icon
+							Icon={ArrowLeft}
+							size={28}
+							color={'var(--color-gray-300)'}
+						/>
+					</button>
+					{!isLoading && (
+						<TodoCard
+							todo={todo}
+							openEditModal={openEditModal}
+							openDeleteModal={openDeleteModal}
+						/>
+					)}
+				</div>
+			</div>
+			{isModalOpen && checkModalType() && (
+				<EditModal
+					isOpen={isModalOpen}
+					editTitle={editTitle}
+					onChange={handleEditInputChange}
+					onUpdate={handleUpdateTodo}
+					onCancel={closeModal}
 				/>
 			)}
-		</div>
+			{isModalOpen && !checkModalType() && (
+				<DeleteModal
+					isOpen={isModalOpen}
+					onDelete={handleDeleteTodo}
+					onCancel={closeModal}
+				/>
+			)}
+		</>
 	);
 };
+
+export default TodoPage;

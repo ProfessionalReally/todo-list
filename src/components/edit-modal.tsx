@@ -1,15 +1,15 @@
 import { ModalWrapper } from './ui/modal-wrapper.tsx';
 import React, { memo } from 'react';
 import { Icon } from './ui/icon';
-import { TextField } from './ui/text-field';
 import { Button } from './ui/button';
 import { SquarePen } from 'lucide-react';
 import '../styles/components/modal.style.scss';
+import { TextArea } from './ui/textarea';
 
 type EditModalProps = {
 	isOpen: boolean;
 	editTitle: string;
-	onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+	onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
 	onUpdate: () => void;
 	onCancel: () => void;
 };
@@ -26,11 +26,12 @@ export const EditModal: React.FC<EditModalProps> = memo(
 						<Icon Icon={SquarePen} size={24} />
 						<h2 className='modal__title--text'>Edit Todo</h2>
 					</div>
-					<TextField
+					<TextArea
 						value={editTitle}
 						onChange={onChange}
 						placeholder='Edit todo'
-						className='modal__edit-input'
+						label='Title: '
+						className='modal__edit-textarea'
 					/>
 					{!editTitle && (
 						<p className='modal__text modal__text--danger'>

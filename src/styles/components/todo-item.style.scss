@@ -7,15 +7,19 @@
   background-color: var(--color-gray-500);
   border-radius: 8px;
   border: 1px solid var(--color-gray-400);
+  transition: filter 0.2s ease-in-out;
 
   &-text {
     margin-right: auto;
+    width: 100%;
     font-weight: 400;
     font-size: 14px;
     line-height: 140%;
-    overflow-wrap: break-word;
-    word-break: break-word;
-    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-decoration: none;
+    color: inherit;
 
     &--completed {
       color: var(--color-gray-300);
@@ -23,24 +27,7 @@
     }
   }
 
-  &-button {
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-
-    svg {
-      transition: stroke 0.1s ease-in-out;
-    }
-
-    &:hover:not(:disabled) {
-      svg {
-        stroke: var(--color-gray-100);
-      }
-    }
-
-    &:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
+  &:hover {
+    filter: brightness(1.15);
   }
 }

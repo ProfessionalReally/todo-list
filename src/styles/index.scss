@@ -6,13 +6,18 @@
   --color-gray-300: #808080;
   --color-gray-400: #333333;
   --color-gray-500: #262626;
+  --color-gray-500-80: #444444;
   --color-gray-600: #1a1a1a;
   --color-gray-700: #0d0d0d;
   --color-purple: #8284fa;
   --color-purple-dark: #5e60ce;
+  --color-purple-dark-80: #4b4dad;
   --color-blue: #4ea8de;
   --color-blue-dark: #1e6f9f;
+  --color-blue-dark-80: #195b80;
   --color-danger: #b6353f;
+  --color-danger-80: #922a34;
+
 }
 
 *, ::before, ::after {
@@ -26,4 +31,40 @@ body {
   background-color: var(--color-gray-600);
   color: var(--color-gray-200);
   min-height: 100vh;
+}
+
+input[type=text], input[type=password], textarea {
+  border: 1px solid var(--color-gray-700);
+  border-radius: 8px;
+  padding: 16px;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 140%;
+  background-color: var(--color-gray-500);
+  color: var(--color-gray-100);
+  transition: border-color 0.1s ease-in-out;
+
+  &::placeholder {
+    color: var(--color-gray-300);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-purple);
+  }
+
+  &:hover {
+    border-color: var(--color-purple);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: var(--color-gray-700);
+    color: var(--color-gray-300);
+  }
+}
+
+textarea {
+  resize: none;
 }

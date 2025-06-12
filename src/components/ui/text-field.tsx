@@ -3,6 +3,7 @@ import '../../styles/components/ui/text-field.style.scss';
 
 type TextFieldProps = {
 	value: string;
+	label?: string;
 	className?: string;
 	type?: 'text' | 'password';
 	placeholder?: string;
@@ -13,9 +14,17 @@ type TextFieldProps = {
 export const TextField: React.FC<TextFieldProps> = ({
 	className = '',
 	type = 'text',
+	label = '',
 	...props
 }) => {
 	return (
-		<input className={'text-field ' + className} type={type} {...props} />
+		<>
+			{label && <label className={'text-field__label'}>{label}</label>}
+			<input
+				className={'text-field ' + className}
+				type={type}
+				{...props}
+			/>
+		</>
 	);
 };

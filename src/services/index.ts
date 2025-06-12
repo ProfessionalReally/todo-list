@@ -14,6 +14,18 @@ export const getTodos = async () => {
 	}
 };
 
+export const getTodoById = async (id: string) => {
+	try {
+		const response = await fetch(`${SERVER_URL_TODOS}/${id}`);
+		if (!response.ok) {
+			throw new Error(`Failed to get todo: ${response.status}`);
+		}
+		return await response.json();
+	} catch (error: Error | unknown) {
+		throw error;
+	}
+};
+
 export const postTodo = async (title: string) => {
 	try {
 		const response = await fetch(SERVER_URL_TODOS, {

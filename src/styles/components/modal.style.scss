@@ -19,8 +19,8 @@
     text-align: center;
   }
 
-  &__edit-input {
-    height: 50px;
+  &__edit-textarea {
+    height: 150px;
   }
 
   &__text {
@@ -51,7 +51,7 @@
     }
 
     &--primary:hover {
-      background-color: color-mix(in srgb, var(--color-blue-dark) 80%, black);
+      background-color: var(--color-blue-dark-80);
     }
 
     &--danger {
@@ -59,7 +59,7 @@
     }
 
     &--danger:hover {
-      background-color: color-mix(in srgb, var(--color-danger) 80%, black);
+      background-color: var(--color-danger-80);
     }
 
     &--light {
@@ -67,7 +67,7 @@
     }
 
     &--light:hover {
-      background-color: color-mix(in srgb, var(--color-gray-500) 80%, white);
+      background-color: var(--color-gray-500-80);
     }
 
   }

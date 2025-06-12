@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import type { Todo } from '../types';
-import { deleteTodo, getTodos, postTodo, updateTodo } from '../services';
+import {
+	deleteTodo,
+	getTodoById,
+	getTodos,
+	postTodo,
+	updateTodo,
+} from '../services';
+
+const LOADING_TIMEOUT = 5000;
 
 type AsyncFunction<T> = () => Promise<T>;
 
@@ -29,14 +37,45 @@ export const useRequestGetTodos = () => {
 	const { request, isLoading, error: errorGet } = useRequest();
 
 	useEffect(() => {
-		request(async () => {
-			return await getTodos();
-		}).then((data: Todo[] | Todo | undefined) => {
+		request(getTodos).then((data: Todo[] | Todo | undefined) => {
 			if (data) setTodos(data as Todo[]);
 		});
 	}, []);
 
 	return { todos, isLoading, errorGet, setTodos };
+};
+
+export const useRequestGetTodo = (id: string | undefined) => {
+	const [isTimeout, setIsTimeout] = useState(false);
+	const [hasFetched, setHasFetched] = useState(false);
+	const [todo, setTodo] = useState<Todo | null>(null);
+	const { request, isLoading, error: errorGet } = useRequest();
+
+	useEffect(() => {
+		if (!id) return;
+
+		let didTimeout = false;
+
+		const timeoutId = setTimeout(() => {
+			didTimeout = true;
+			setIsTimeout(true);
+		}, LOADING_TIMEOUT);
+
+		request(async () => {
+			return await getTodoById(id);
+		})
+			.then((data: Todo[] | Todo | undefined) => {
+				if (!didTimeout) setHasFetched(true);
+				if (data) setTodo(data as Todo);
+			})
+			.finally(() => {
+				clearTimeout(timeoutId);
+			});
+
+		return () => clearTimeout(timeoutId);
+	}, [id]);
+
+	return { todo, isTimeout, hasFetched, isLoading, errorGet, setTodo };
 };
 
 export const useRequestPostTodo = (

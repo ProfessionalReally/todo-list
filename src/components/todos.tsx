@@ -9,11 +9,7 @@ type TodosProps = {
 	deleteTodo: (id: string) => void;
 };
 
-export const Todos: React.FC<TodosProps> = ({
-	todos,
-	updateTodo,
-	deleteTodo,
-}) => {
+export const Todos: React.FC<TodosProps> = ({ todos, updateTodo }) => {
 	const completedTodos = useMemo(
 		() => todos.filter((todo) => todo.completed),
 		[todos],
@@ -45,11 +41,7 @@ export const Todos: React.FC<TodosProps> = ({
 					</span>
 				</div>
 			</div>
-			<TodoList
-				todos={todos}
-				updateTodo={updateTodo}
-				deleteTodo={deleteTodo}
-			/>
+			<TodoList todos={todos} updateTodo={updateTodo} />
 		</section>
 	);
 };
