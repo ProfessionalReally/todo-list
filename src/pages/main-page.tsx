@@ -10,17 +10,24 @@ import { Button } from '../components/ui/button';
 import { TextField } from '../components/ui/text-field';
 import { Icon } from '../components/ui/icon';
 import { ArrowDownAZ, ArrowUpAZ, CirclePlus } from 'lucide-react';
+import { Select } from '../components/ui/select';
+import {
+	useTodoViewContext,
+	filterOptions,
+} from '../context/todo-view-context';
+import type { Sort, Filter } from '../context/todo-view-context';
 
-const getSortIcon = (sortAsc: boolean | null) => {
-	if (sortAsc === true) return <Icon Icon={ArrowDownAZ} />;
-	if (sortAsc === false) return <Icon Icon={ArrowUpAZ} />;
+const getSortIcon = (sort: Sort) => {
+	if (sort === true) return <Icon Icon={ArrowDownAZ} />;
+	if (sort === false) return <Icon Icon={ArrowUpAZ} />;
 	return null;
 };
 
 export const MainPage = () => {
 	const [query, setQuery] = useState<string>('');
-	const [sortAsc, setSortAsc] = useState<boolean | null>(null);
 	const [titleTodo, setTitleTodo] = useState<string>('');
+
+	const { sort, setSort, filter, setFilter } = useTodoViewContext();
 
 	const { todos, isLoading, error, updateTodo, deleteTodo, addTodo } =
 		useTodos();
@@ -36,13 +43,20 @@ export const MainPage = () => {
 		);
 	}, [todos, debouncedQuery]);
 
-	const sortedTodos = useMemo(() => {
-		return [...searchedTodos].sort((a, b) => {
-			if (sortAsc === null) return 0;
-			if (sortAsc) return a.title.localeCompare(b.title);
-			return b.title.localeCompare(a.title);
-		});
-	}, [searchedTodos, sortAsc]);
+	const filteredSortedTodos = useMemo(() => {
+		return [...searchedTodos]
+			.sort((a, b) => {
+				if (sort === null) return 0;
+				if (sort) return a.title.localeCompare(b.title);
+				return b.title.localeCompare(a.title);
+			})
+			.filter((todo) => {
+				if (filter === filterOptions.completed) return todo.completed;
+				if (filter === filterOptions.uncompleted)
+					return !todo.completed;
+				return todo;
+			});
+	}, [searchedTodos, sort, filter]);
 
 	const onChangeAddTodoInput = (
 		event: React.ChangeEvent<HTMLInputElement>,
@@ -60,8 +74,12 @@ export const MainPage = () => {
 		setQuery(event.target.value);
 	};
 
+	const onChangeFilter = (event: React.ChangeEvent<HTMLSelectElement>) => {
+		setFilter(event.target.value as Filter);
+	};
+
 	const onToggleSort = () => {
-		setSortAsc((prev) => {
+		setSort((prev: Sort) => {
 			if (prev === null) return true;
 			if (prev) return false;
 			return null;
@@ -77,8 +95,8 @@ export const MainPage = () => {
 							onClick={onToggleSort}
 							className={'header__button--filter'}
 						>
-							Filter
-							{getSortIcon(sortAsc)}
+							Sort
+							{getSortIcon(sort)}
 						</Button>
 						<form
 							className={'header__form'}
@@ -100,19 +118,26 @@ export const MainPage = () => {
 							</Button>
 						</form>
 					</div>
-					<TextField
-						value={query}
-						onChange={onChangeQuery}
-						className={'header__search'}
-						placeholder='Search...'
-					/>
+					<div className={'header__search'}>
+						<TextField
+							value={query}
+							onChange={onChangeQuery}
+							className={'header__input-search'}
+							placeholder='Search...'
+						/>
+						<Select value={filter} onChange={onChangeFilter}>
+							<option value='all'>All</option>
+							<option value='completed'>Completed</option>
+							<option value='uncompleted'>Uncompleted</option>
+						</Select>
+					</div>
 				</div>
 			</Header>
 			{isLoading && <Spinner />}
 			{error && <Error>{error.message}</Error>}
 			{!isLoading && !error && (
 				<Todos
-					todos={sortedTodos}
+					todos={filteredSortedTodos}
 					updateTodo={updateTodo}
 					deleteTodo={deleteTodo}
 				/>

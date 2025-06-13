@@ -33,7 +33,7 @@ body {
   min-height: 100vh;
 }
 
-input[type=text], input[type=password], textarea {
+input[type=text], input[type=password], textarea, select {
   border: 1px solid var(--color-gray-700);
   border-radius: 8px;
   padding: 16px;
@@ -67,4 +67,22 @@ input[type=text], input[type=password], textarea {
 
 textarea {
   resize: none;
+}
+
+select {
+  padding-block: 0;
+
+  option {
+    background-color: var(--color-gray-500);
+    color: var(--color-gray-100);
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &:checked {
+      display: none;
+    }
+  }
 }

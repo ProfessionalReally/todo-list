@@ -60,7 +60,14 @@
     flex: 1 0 auto;
   }
 
+  &__input-search {
+    flex: 1 0 auto;
+  }
+
   &__search {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
     height: 40px;
   }
 
