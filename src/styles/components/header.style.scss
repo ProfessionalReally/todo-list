@@ -1,3 +1,5 @@
+@use '../abstracts/mixins' as *;
+@use '../abstracts/variables' as *;
 
 .header {
   position: relative;
@@ -15,6 +17,11 @@
     flex-direction: column;
     gap: 16px;
     bottom: -85px;
+    padding: 0 18px;
+
+    @include media-max($breakpoint-mobile) {
+      bottom: -185px;
+    }
   }
 
   &__controls {
@@ -23,13 +30,21 @@
     justify-content: space-between;
     gap: 16px;
     height: 54px;
+
+    @include media-max($breakpoint-mobile) {
+      height: auto;
+      align-items: normal;
+      flex-direction: column-reverse;
+    }
   }
 
   &__button {
     transition: background-color 0.1s ease-in-out, scale 0.1s ease-in-out;
 
+
     &--filter {
       background-color: var(--color-purple-dark);
+
     }
 
     &--filter:hover {
@@ -47,6 +62,7 @@
     &--create:hover {
       background-color: color-mix(in srgb, var(--color-blue-dark) 80%, black);
     }
+
   }
 
   &__form {
@@ -54,6 +70,10 @@
     display: flex;
     gap: 8px;
     height: 100%;
+
+    @include media-max($breakpoint-mobile) {
+      flex-direction: column;
+    }
   }
 
   &__input-create {
@@ -62,6 +82,20 @@
 
   &__input-search {
     flex: 1 0 auto;
+
+    @include media-max($breakpoint-mobile) {
+      flex: 1 1 auto;
+      max-width: 100%;
+      min-width: 0;
+    }
+  }
+
+  &__select-filter {
+    @include media-max($breakpoint-mobile) {
+      flex: 1 1 auto;
+      max-width: 100%;
+      min-width: 140px;
+    }
   }
 
   &__search {
@@ -69,8 +103,11 @@
     justify-content: center;
     gap: 8px;
     height: 40px;
+    min-width: 0;
   }
 
-
 }
+
+
+
 

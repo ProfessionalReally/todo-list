@@ -1,5 +1,13 @@
+@use '../abstracts/mixins' as *;
+@use '../abstracts/variables' as *;
+
 .main-page {
   display: flex;
   flex-direction: column;
   gap: 150px;
+  padding-bottom: 18px;
+
+  @include media-max($breakpoint-mobile) {
+    gap: 250px;
+  }
 }

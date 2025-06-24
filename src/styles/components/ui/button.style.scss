@@ -1,3 +1,6 @@
+@use '../../abstracts/mixins' as *;
+@use '../../abstracts/variables' as *;
+
 .button {
   display: flex;
   align-items: center;
@@ -13,6 +16,10 @@
   color: var(--color-gray-100);
   cursor: pointer;
   transition: background-color 0.2s ease-in-out, scale 0.1s ease-in-out;
+
+  @include media-max($breakpoint-mobile) {
+    height: 40px;
+  }
 
   &:active {
     scale: 0.98;

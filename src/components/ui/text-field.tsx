@@ -20,11 +20,7 @@ export const TextField: React.FC<TextFieldProps> = ({
 	return (
 		<>
 			{label && <label className={'text-field__label'}>{label}</label>}
-			<input
-				className={'text-field ' + className}
-				type={type}
-				{...props}
-			/>
+			<input className={className} type={type} {...props} />
 		</>
 	);
 };

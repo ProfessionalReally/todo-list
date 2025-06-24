@@ -18,7 +18,7 @@ export const TextArea: React.FC<TextAreaProps> = ({
 	return (
 		<>
 			{label && <label className={'text-area__label'}>{label}</label>}
-			<textarea className={'text-area ' + className} {...props} />
+			<textarea className={className} {...props} />
 		</>
 	);
 };

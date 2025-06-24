@@ -14,7 +14,7 @@ export const Select: React.FC<SelectProps> = ({
 	...props
 }) => {
 	return (
-		<select className={'select ' + className} {...props}>
+		<select className={className} {...props}>
 			{children}
 		</select>
 	);

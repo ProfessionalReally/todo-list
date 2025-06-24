@@ -125,10 +125,19 @@ export const MainPage = () => {
 							className={'header__input-search'}
 							placeholder='Search...'
 						/>
-						<Select value={filter} onChange={onChangeFilter}>
-							<option value='all'>All</option>
-							<option value='completed'>Completed</option>
-							<option value='uncompleted'>Uncompleted</option>
+						<Select
+							value={filter}
+							onChange={onChangeFilter}
+							className={'header__select-filter'}
+						>
+							{Object.entries(filterOptions).map(
+								([key, value]) => (
+									<option key={value} value={value}>
+										{key.charAt(0).toUpperCase() +
+											key.slice(1)}
+									</option>
+								),
+							)}
 						</Select>
 					</div>
 				</div>

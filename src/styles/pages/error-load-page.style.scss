@@ -1,3 +1,7 @@
+@use '../abstracts/mixins' as *;
+@use '../abstracts/variables' as *;
+
+
 .error-load-page {
   min-height: 100vh;
   display: flex;
@@ -11,6 +15,7 @@
     align-items: center;
     gap: 8px;
     margin: auto 0;
+    padding: 0 18px;
   }
 
   &__title {
@@ -19,6 +24,19 @@
     line-height: 140%;
     text-align: center;
     text-transform: uppercase;
+
+    @include media-max($breakpoint-mobile) {
+      font-size: 44px;
+    }
+  }
+
+  &__text {
+    font-size: 16px;
+    text-align: center;
+
+    @include media-max($breakpoint-mobile) {
+      font-size: 14px;
+    }
   }
 
   &__buttons {

@@ -1,4 +1,7 @@
+@use './abstracts/variables' as *;
+@use './abstracts/mixins' as *;
 @import 'https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap';
+
 
 :root {
   --color-gray-100: #f2f2f2;
@@ -31,6 +34,7 @@ body {
   background-color: var(--color-gray-600);
   color: var(--color-gray-200);
   min-height: 100vh;
+  min-width: 320px;
 }
 
 input[type=text], input[type=password], textarea, select {
@@ -43,6 +47,10 @@ input[type=text], input[type=password], textarea, select {
   background-color: var(--color-gray-500);
   color: var(--color-gray-100);
   transition: border-color 0.1s ease-in-out;
+
+  @include media-max($breakpoint-mobile) {
+    padding: 12px;
+  }
 
   &::placeholder {
     color: var(--color-gray-300);
@@ -71,6 +79,10 @@ textarea {
 
 select {
   padding-block: 0;
+
+  @include media-max($breakpoint-mobile) {
+    font-size: 14px;
+  }
 
   option {
     background-color: var(--color-gray-500);
