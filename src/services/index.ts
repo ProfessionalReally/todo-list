@@ -1,6 +1,6 @@
-import type { Todo } from '../types';
+import type { TodoI } from '../types';
 
-const SERVER_URL_TODOS = 'http://localhost:3000/todos';
+const SERVER_URL_TODOS: string = import.meta.env.VITE_SERVER_URL_TODOS;
 
 export const getTodos = async () => {
 	try {
@@ -58,7 +58,7 @@ export const deleteTodo = async (id: string) => {
 	}
 };
 
-export const updateTodo = async (id: string, updatedFields: Partial<Todo>) => {
+export const updateTodo = async (id: string, updatedFields: Partial<TodoI>) => {
 	try {
 		const response = await fetch(`${SERVER_URL_TODOS}/${id}`, {
 			method: 'PATCH',

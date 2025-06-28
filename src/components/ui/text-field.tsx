@@ -1,13 +1,16 @@
 import React from 'react';
-import '../../styles/components/ui/text-field.style.scss';
+import '@src/styles/components/ui/text-field.style.scss';
 
 type TextFieldProps = {
-	value: string;
+	value?: string;
+	name?: string;
+	defaultValue?: string;
 	label?: string;
 	className?: string;
 	type?: 'text' | 'password';
 	placeholder?: string;
-	onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+	onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+	disabled?: boolean;
 	required?: boolean;
 };
 

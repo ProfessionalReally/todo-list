@@ -1,7 +1,7 @@
-import { MainPage } from './pages/main-page';
+import { MainPage } from '@src/pages/main-page';
 import { Route, Routes } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
-import { Spinner } from './components/ui/spinner';
+import { Spinner } from '@src/components/ui/spinner';
 
 const TodoPage = lazy(() => import('./pages/todo-page'));
 const ErrorLoadPage = lazy(() => import('./pages/error-load-page'));

@@ -1,37 +1,36 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { useCallback, useEffect } from 'react';
-import { deleteTodo, updateTodo } from '../services';
-import { Header } from '../components/header';
+import { useEffect } from 'react';
+import { Header } from '@src/components/header';
 import { ArrowLeft } from 'lucide-react';
-import { Icon } from '../components/ui/icon';
-import '../styles/pages/todo-page.style.scss';
-import { TodoCard } from '../components/todo-card';
-import { EditModal } from '../components/edit-modal';
-import { DeleteModal } from '../components/delete-modal';
-import { useRequestGetTodo } from '../hooks/use-request';
-import { useModal } from '../hooks/use-modal';
-import { Spinner } from '../components/ui/spinner';
+import { Icon } from '@src/components/ui/icon';
+import '@src/styles/pages/todo-page.style.scss';
+import { TodoCard } from '@src/components/todo-card';
+import { EditModal } from '@src/components/edit-modal';
+import { DeleteModal } from '@src/components/delete-modal';
+import { useModal } from '@src/hooks/use-modal';
+import { Spinner } from '@src/components/ui/spinner';
+import { useTodoCard } from '@src/hooks/use-todo-card';
+import { useTodoActions } from '@src/hooks/use-todo-actions';
 
 const TodoPage = () => {
 	const { id } = useParams<string>();
 	const navigate = useNavigate();
 
+	const { todo, isLoading, error, isTimeout } = useTodoCard(id!);
+
 	useEffect(() => {
 		if (!id) {
 			navigate('/404');
+			return;
 		}
-	}, [id, navigate]);
-
-	const { todo, isTimeout, hasFetched, isLoading, setTodo } =
-		useRequestGetTodo(id!);
-
-	useEffect(() => {
 		if (isTimeout) {
 			navigate('/load-error');
-		} else if (hasFetched && !todo) {
+		} else if (error && !todo) {
 			navigate('/404');
 		}
-	}, [todo, isLoading, isTimeout, navigate]);
+	}, [id, isTimeout, error, todo, navigate]);
+
+	const { updateTodo, deleteTodo } = useTodoActions();
 
 	const {
 		isModalOpen,
@@ -43,16 +42,15 @@ const TodoPage = () => {
 		closeModal,
 	} = useModal();
 
-	const handleUpdateTodo = useCallback(() => {
+	const handleUpdateTodo = () => {
 		if (id && editTitle) {
 			updateTodo(id, { title: editTitle })
-				.then(setTodo)
 				.catch(console.error)
 				.finally(closeModal);
 		}
-	}, [id, editTitle, closeModal]);
+	};
 
-	const handleDeleteTodo = useCallback(() => {
+	const handleDeleteTodo = () => {
 		if (id) {
 			deleteTodo(id)
 				.catch(console.error)
@@ -61,13 +59,14 @@ const TodoPage = () => {
 					navigate('/');
 				});
 		}
-	}, [id, closeModal]);
+	};
 
-	const handleClickBack = useCallback(() => {
+	const handleClickBack = () => {
 		navigate(-1);
-	}, [navigate]);
+	};
 
-	if (!todo) return null;
+	const isEditModal = isModalOpen && checkModalType();
+	const isDeleteModal = isModalOpen && !checkModalType();
 
 	return (
 		<>
@@ -85,7 +84,7 @@ const TodoPage = () => {
 							color={'var(--color-gray-300)'}
 						/>
 					</button>
-					{!isLoading && (
+					{!isLoading && todo && (
 						<TodoCard
 							todo={todo}
 							openEditModal={openEditModal}
@@ -94,7 +93,7 @@ const TodoPage = () => {
 					)}
 				</div>
 			</div>
-			{isModalOpen && checkModalType() && (
+			{isEditModal && (
 				<EditModal
 					isOpen={isModalOpen}
 					editTitle={editTitle}
@@ -103,7 +102,7 @@ const TodoPage = () => {
 					onCancel={closeModal}
 				/>
 			)}
-			{isModalOpen && !checkModalType() && (
+			{isDeleteModal && (
 				<DeleteModal
 					isOpen={isModalOpen}
 					onDelete={handleDeleteTodo}

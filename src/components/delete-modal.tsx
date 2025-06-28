@@ -1,8 +1,8 @@
-import { ModalWrapper } from './ui/modal-wrapper.tsx';
+import { ModalWrapper } from './ui/modal-wrapper';
 import React, { memo } from 'react';
 import { Icon } from './ui/icon';
 import { Button } from './ui/button';
-import '../styles/components/modal.style.scss';
+import '@src/styles/components/modal.style.scss';
 import { CircleAlert } from 'lucide-react';
 
 type DeleteModalProps = {

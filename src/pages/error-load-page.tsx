@@ -1,8 +1,8 @@
-import { Header } from '../components/header';
+import { Header } from '@src/components/header';
 import { CircleAlert, House, RotateCcw } from 'lucide-react';
-import { Icon } from '../components/ui/icon';
-import '../styles/pages/error-load-page.style.scss';
-import { Button } from '../components/ui/button';
+import { Icon } from '@src/components/ui/icon';
+import '@src/styles/pages/error-load-page.style.scss';
+import { Button } from '@src/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 
 const ErrorLoadPage = () => {

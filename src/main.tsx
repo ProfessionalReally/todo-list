@@ -1,13 +1,14 @@
 import { createRoot } from 'react-dom/client';
-import './styles/index.scss';
+import '@src/styles/index.scss';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
-import { TodoViewProvider } from './context/todo-view-context';
+import { Provider } from 'react-redux';
+import { store } from '@src/redux/store';
 
 createRoot(document.getElementById('root')!).render(
-	<TodoViewProvider>
-		<BrowserRouter>
+	<BrowserRouter>
+		<Provider store={store}>
 			<App />
-		</BrowserRouter>
-	</TodoViewProvider>,
+		</Provider>
+	</BrowserRouter>,
 );

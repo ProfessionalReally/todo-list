@@ -1,89 +1,55 @@
-import { Header } from '../components/header';
-import { Todos } from '../components/todos';
-import '../styles/pages/main-page.style.scss';
-import { Spinner } from '../components/ui/spinner';
-import { Error } from '../components/ui/error';
-import { useTodos } from '../hooks/use-todos';
-import React, { useMemo, useState } from 'react';
-import { useDebounce } from '../hooks/use-debounce';
-import { Button } from '../components/ui/button';
-import { TextField } from '../components/ui/text-field';
-import { Icon } from '../components/ui/icon';
-import { ArrowDownAZ, ArrowUpAZ, CirclePlus } from 'lucide-react';
-import { Select } from '../components/ui/select';
-import {
-	useTodoViewContext,
-	filterOptions,
-} from '../context/todo-view-context';
-import type { Sort, Filter } from '../context/todo-view-context';
+import { Header } from '@src/components/header';
+import { Todos } from '@src/components/todos';
+import '@src/styles/pages/main-page.style.scss';
+import { Spinner } from '@src/components/ui/spinner';
+import { Error } from '@src/components/ui/error';
+import { useTodoList } from '@src/hooks/use-todo-list';
+import React, { useEffect, useState } from 'react';
+import { useDebounce } from '@src/hooks/use-debounce';
+import { Button } from '@src/components/ui/button';
+import { TextField } from '@src/components/ui/text-field';
+import { Icon } from '@src/components/ui/icon';
+import { ArrowDownAZ, ArrowUpAZ, CirclePlus, ListFilter } from 'lucide-react';
+import { Select } from '@src/components/ui/select';
+import { DEBOUNCE_DELAY } from '@src/constants';
+import { useTodoActions } from '@src/hooks/use-todo-actions';
+import { FILTER_OPTIONS, type FilterT, type SortT } from '@src/types';
+import { useViewSettings } from '@src/hooks/use-view-settings';
 
-const getSortIcon = (sort: Sort) => {
+const getSortIcon = (sort: SortT) => {
 	if (sort === true) return <Icon Icon={ArrowDownAZ} />;
 	if (sort === false) return <Icon Icon={ArrowUpAZ} />;
-	return null;
+	return <Icon Icon={ListFilter} />;
 };
 
 export const MainPage = () => {
-	const [query, setQuery] = useState<string>('');
-	const [titleTodo, setTitleTodo] = useState<string>('');
+	const [queryPage, setQueryPage] = useState<string>('');
+	const { sort, filter, onChangeFilter, onChangeQuery, onToggleSort } =
+		useViewSettings();
+	const { todos, isLoading, error } = useTodoList();
+	const { addTodo } = useTodoActions();
 
-	const { sort, setSort, filter, setFilter } = useTodoViewContext();
+	const debouncedQuery = useDebounce(queryPage, DEBOUNCE_DELAY);
 
-	const { todos, isLoading, error, updateTodo, deleteTodo, addTodo } =
-		useTodos();
+	useEffect(() => {
+		onChangeQuery(debouncedQuery);
+	}, [debouncedQuery]);
 
-	const debouncedQuery = useDebounce(query, 500);
-
-	const searchedTodos = useMemo(() => {
-		if (!query.trim()) return todos;
-		return (
-			todos.filter((todo) =>
-				todo.title.toLowerCase().includes(debouncedQuery.toLowerCase()),
-			) || []
-		);
-	}, [todos, debouncedQuery]);
-
-	const filteredSortedTodos = useMemo(() => {
-		return [...searchedTodos]
-			.sort((a, b) => {
-				if (sort === null) return 0;
-				if (sort) return a.title.localeCompare(b.title);
-				return b.title.localeCompare(a.title);
-			})
-			.filter((todo) => {
-				if (filter === filterOptions.completed) return todo.completed;
-				if (filter === filterOptions.uncompleted)
-					return !todo.completed;
-				return todo;
-			});
-	}, [searchedTodos, sort, filter]);
-
-	const onChangeAddTodoInput = (
-		event: React.ChangeEvent<HTMLInputElement>,
-	) => {
-		setTitleTodo(event.target.value);
-	};
 	const onSubmitAddTodo = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		if (!titleTodo) return;
-		addTodo(titleTodo);
-		setTitleTodo('');
+		const form = event.currentTarget as HTMLFormElement & {
+			title: { value: string };
+		};
+
+		const inputValue = form.title.value.trim();
+		if (!inputValue) return;
+
+		addTodo(inputValue);
+		form.reset();
 	};
 
-	const onChangeQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setQuery(event.target.value);
-	};
-
-	const onChangeFilter = (event: React.ChangeEvent<HTMLSelectElement>) => {
-		setFilter(event.target.value as Filter);
-	};
-
-	const onToggleSort = () => {
-		setSort((prev: Sort) => {
-			if (prev === null) return true;
-			if (prev) return false;
-			return null;
-		});
+	const onChangeQueryPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setQueryPage(event.target.value);
 	};
 
 	return (
@@ -93,7 +59,8 @@ export const MainPage = () => {
 					<div className={'header__controls'}>
 						<Button
 							onClick={onToggleSort}
-							className={'header__button--filter'}
+							className={'header__button--sort'}
+							disabled={isLoading}
 						>
 							Sort
 							{getSortIcon(sort)}
@@ -103,14 +70,16 @@ export const MainPage = () => {
 							onSubmit={onSubmitAddTodo}
 						>
 							<TextField
-								value={titleTodo}
-								onChange={onChangeAddTodoInput}
+								name={'title'}
+								defaultValue={''}
+								disabled={isLoading}
 								className={'header__input-create'}
 								placeholder='Add a new task'
 							/>
 							<Button
 								onClick={() => {}}
 								type='submit'
+								disabled={isLoading}
 								className={'header__button--create'}
 							>
 								Create
@@ -120,17 +89,21 @@ export const MainPage = () => {
 					</div>
 					<div className={'header__search'}>
 						<TextField
-							value={query}
-							onChange={onChangeQuery}
+							value={queryPage}
+							onChange={onChangeQueryPage}
+							disabled={isLoading}
 							className={'header__input-search'}
 							placeholder='Search...'
 						/>
 						<Select
 							value={filter}
-							onChange={onChangeFilter}
+							onChange={(e) =>
+								onChangeFilter(e.target.value as FilterT)
+							}
+							disabled={isLoading}
 							className={'header__select-filter'}
 						>
-							{Object.entries(filterOptions).map(
+							{Object.entries(FILTER_OPTIONS).map(
 								([key, value]) => (
 									<option key={value} value={value}>
 										{key.charAt(0).toUpperCase() +
@@ -143,14 +116,8 @@ export const MainPage = () => {
 				</div>
 			</Header>
 			{isLoading && <Spinner />}
-			{error && <Error>{error.message}</Error>}
-			{!isLoading && !error && (
-				<Todos
-					todos={filteredSortedTodos}
-					updateTodo={updateTodo}
-					deleteTodo={deleteTodo}
-				/>
-			)}
+			{error && <Error>{error}</Error>}
+			{!error && <Todos todos={todos} />}
 		</div>
 	);
 };

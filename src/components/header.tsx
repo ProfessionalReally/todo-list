@@ -1,5 +1,5 @@
-import todoLogo from '../assets/TodoLogo.svg';
-import '../styles/components/header.style.scss';
+import todoLogo from '@src/assets/TodoLogo.svg';
+import '@src/styles/components/header.style.scss';
 import React from 'react';
 
 type HeaderProps = {

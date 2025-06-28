@@ -1,15 +1,13 @@
-import '../styles/components/todos.style.scss';
+import '@src/styles/components/todos.style.scss';
 import { TodoList } from './todo-list';
-import type { Todo } from '../types';
+import type { TodoI } from '@src/types';
 import React, { useMemo } from 'react';
 
 type TodosProps = {
-	todos: Todo[];
-	updateTodo: (id: string, updatedFields: Partial<Todo>) => void;
-	deleteTodo: (id: string) => void;
+	todos: TodoI[];
 };
 
-export const Todos: React.FC<TodosProps> = ({ todos, updateTodo }) => {
+export const Todos: React.FC<TodosProps> = ({ todos }) => {
 	const completedTodos = useMemo(
 		() => todos.filter((todo) => todo.completed),
 		[todos],
@@ -41,7 +39,7 @@ export const Todos: React.FC<TodosProps> = ({ todos, updateTodo }) => {
 					</span>
 				</div>
 			</div>
-			<TodoList todos={todos} updateTodo={updateTodo} />
+			<TodoList todos={todos} />
 		</section>
 	);
 };

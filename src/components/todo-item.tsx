@@ -1,16 +1,18 @@
-import '../styles/components/todo-item.style.scss';
+import '@src/styles/components/todo-item.style.scss';
 import { Checkbox } from './ui/checkbox';
 import React, { memo, useCallback } from 'react';
-import type { Todo } from '../types';
+import type { TodoI } from '@src/types';
 import { Link } from 'react-router-dom';
+import { useTodoActions } from '@src/hooks/use-todo-actions';
 
 type TodoItemProps = {
-	todo: Todo;
-	updateTodo: (id: string, updatedFields: Partial<Todo>) => void;
+	todo: TodoI;
 };
 
 export const TodoItem: React.FC<TodoItemProps> = memo(
-	({ todo, updateTodo }) => {
+	({ todo }) => {
+		const { updateTodo } = useTodoActions();
+
 		const onToggleCompleted = useCallback(() => {
 			updateTodo(todo.id, { completed: !todo.completed });
 		}, [todo, updateTodo]);

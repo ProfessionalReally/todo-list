@@ -1,9 +1,9 @@
-import { ModalWrapper } from './ui/modal-wrapper.tsx';
+import { ModalWrapper } from './ui/modal-wrapper';
 import React, { memo } from 'react';
 import { Icon } from './ui/icon';
 import { Button } from './ui/button';
 import { SquarePen } from 'lucide-react';
-import '../styles/components/modal.style.scss';
+import '@src/styles/components/modal.style.scss';
 import { TextArea } from './ui/textarea';
 
 type EditModalProps = {

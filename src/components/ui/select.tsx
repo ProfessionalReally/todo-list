@@ -5,7 +5,7 @@ type SelectProps = {
 	className?: string;
 	disabled?: boolean;
 	value: string;
-	onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+	onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 };
 
 export const Select: React.FC<SelectProps> = ({

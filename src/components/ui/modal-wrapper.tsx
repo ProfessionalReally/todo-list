@@ -1,7 +1,8 @@
 import Modal from 'react-modal';
 import React from 'react';
-import '../../styles/components/ui/modal-wrapper.style.scss';
+import '@src/styles/components/ui/modal-wrapper.style.scss';
 import { X } from 'lucide-react';
+import { Icon } from '@src/components/ui/icon';
 
 Modal.setAppElement('#root');
 
@@ -27,7 +28,7 @@ export const ModalWrapper: React.FC<ModalProps> = ({
 			overlayClassName='modal__overlay'
 		>
 			<button className={'modal__close-button'} onClick={onClose}>
-				<X size={'20'} color={'var(--color-gray-300)'} />
+				<Icon Icon={X} color={'var(--color-gray-300)'} />
 			</button>
 			{children}
 		</Modal>

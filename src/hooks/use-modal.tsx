@@ -1,47 +1,42 @@
-import React, { useCallback, useState } from 'react';
-import type { Todo, TYPE_MODAL } from '../types';
-import { TYPES_MODAL } from '../types';
+import React, { useState } from 'react';
+import type { TodoI, TYPE_MODAL } from '@src/types';
+import { TYPES_MODAL } from '@src/types';
 
 export const useModal = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [modalType, setModalType] = useState<TYPE_MODAL | null>(null);
 	const [editTitle, setEditTitle] = useState('');
 
-	const closeModal = useCallback(() => {
+	const closeModal = () => {
 		setIsModalOpen(false);
 		setModalType(null);
 		setEditTitle('');
-	}, []);
+	};
 
-	const openEditModal = useCallback(
-		(todo: Todo) => {
-			if (!isModalOpen) {
-				setEditTitle(todo.title);
-				setModalType(TYPES_MODAL.EDIT);
-				setIsModalOpen(true);
-			}
-		},
-		[isModalOpen],
-	);
+	const openEditModal = (todo: TodoI) => {
+		if (!isModalOpen) {
+			setEditTitle(todo.title);
+			setModalType(TYPES_MODAL.EDIT);
+			setIsModalOpen(true);
+		}
+	};
 
-	const openDeleteModal = useCallback(() => {
+	const openDeleteModal = () => {
 		if (!isModalOpen) {
 			setModalType(TYPES_MODAL.DELETE);
 			setIsModalOpen(true);
 		}
-	}, [isModalOpen]);
+	};
 
-	const handleEditInputChange = useCallback(
-		(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-			setEditTitle(e.target.value);
-		},
-		[],
-	);
+	const handleEditInputChange = (
+		e: React.ChangeEvent<HTMLTextAreaElement>,
+	) => {
+		setEditTitle(e.target.value);
+	};
 
-	const checkModalType = useCallback(() => {
-		if (modalType === TYPES_MODAL.EDIT) return true;
-		if (modalType === TYPES_MODAL.DELETE) return false;
-	}, [modalType]);
+	const checkModalType = () => {
+		return modalType === TYPES_MODAL.EDIT;
+	};
 
 	return {
 		isModalOpen,

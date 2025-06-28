@@ -1,25 +1,20 @@
-import '../styles/components/todo-list.style.scss';
+import '@src/styles/components/todo-list.style.scss';
 import { TodoItem } from './todo-item';
 import React from 'react';
-import type { Todo } from '../types';
-import emptyTodos from '../assets/EmptyTodo.svg';
+import type { TodoI } from '@src/types';
+import emptyTodos from '@src/assets/EmptyTodo.svg';
 
 type TodoListProps = {
-	todos: Todo[];
-	updateTodo: (id: string, updatedFields: Partial<Todo>) => void;
+	todos: TodoI[];
 };
 
-export const TodoList: React.FC<TodoListProps> = ({ todos, updateTodo }) => {
+export const TodoList: React.FC<TodoListProps> = ({ todos }) => {
 	return (
 		<>
 			<ul className={'todo-list'}>
 				{todos.length > 0 &&
-					todos.map((todo: Todo) => (
-						<TodoItem
-							key={todo.id}
-							todo={todo}
-							updateTodo={updateTodo}
-						/>
+					todos.map((todo: TodoI) => (
+						<TodoItem key={todo.id} todo={todo} />
 					))}
 			</ul>
 			{todos.length === 0 && (

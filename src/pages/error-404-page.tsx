@@ -1,8 +1,8 @@
-import { Button } from '../components/ui/button';
-import { Header } from '../components/header';
+import { Button } from '@src/components/ui/button';
+import { Header } from '@src/components/header';
 import { useNavigate } from 'react-router-dom';
-import '../styles/pages/error-404-page.style.scss';
-import { Icon } from '../components/ui/icon';
+import '@src/styles/pages/error-404-page.style.scss';
+import { Icon } from '@src/components/ui/icon';
 import { ArrowLeft, House } from 'lucide-react';
 
 const Error404Page = () => {

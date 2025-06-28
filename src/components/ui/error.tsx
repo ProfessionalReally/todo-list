@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../styles/components/ui/error.scss';
+import '@src/styles/components/ui/error.style.scss';
 
 type ErrorProps = {
 	children: React.ReactNode;
