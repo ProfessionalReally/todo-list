@@ -1,23 +1,22 @@
-import { useDispatch, useSelector } from 'react-redux';
 import { selectTodoCard } from '@src/redux/selectors';
 import { useEffect } from 'react';
-import type { AppDispatch } from '@src/redux/store';
-import { fetchTodoById } from '@src/redux/actions';
+import { fetchTodoById } from '@src/redux/actions/actions';
+import { useAppDispatch, useAppSelector } from '@src/redux/hooks';
 
 export const useTodoCard = (id: string) => {
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 
-	const { todo, isLoading, error, isTimeout } = useSelector(selectTodoCard);
+	const { todo, isLoading, error } = useAppSelector(selectTodoCard);
 
 	useEffect(() => {
 		if (!id) return;
-		dispatch(fetchTodoById(id));
-	}, [dispatch]);
+
+		dispatch(fetchTodoById({ id }));
+	}, [dispatch, id]);
 
 	return {
 		todo,
 		isLoading,
 		error,
-		isTimeout,
 	};
 };

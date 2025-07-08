@@ -9,7 +9,7 @@ const Error404Page = lazy(() => import('./pages/error-404-page'));
 
 export default function App() {
 	return (
-		<Suspense fallback={<Spinner />}>
+		<Suspense fallback={<Spinner fullScreen size={100} />}>
 			<Routes>
 				<Route path='/' element={<MainPage />} />
 				<Route path='/todo/:id' element={<TodoPage />} />

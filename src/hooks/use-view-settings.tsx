@@ -1,16 +1,15 @@
-import { useDispatch, useSelector } from 'react-redux';
 import { selectViewSettings } from '@src/redux/selectors';
-import type { AppDispatch } from '@src/redux/store';
 import type { FilterT, QueryT } from '@src/types';
 import {
 	setFilterAction,
 	setQueryAction,
 	toggleSortAction,
-} from '@src/redux/actions';
+} from '@src/redux/reducers/view-settings-reducer';
+import { useAppDispatch, useAppSelector } from '@src/redux/hooks';
 
 export const useViewSettings = () => {
-	const dispatch = useDispatch<AppDispatch>();
-	const viewSettingsState = useSelector(selectViewSettings);
+	const dispatch = useAppDispatch();
+	const viewSettingsState = useAppSelector(selectViewSettings);
 
 	const onChangeQuery = (query: QueryT) => dispatch(setQueryAction(query));
 

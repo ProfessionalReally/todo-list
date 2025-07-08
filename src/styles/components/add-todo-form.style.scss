@@ -1,0 +1,37 @@
+@use '../abstracts/mixins' as *;
+@use '../abstracts/variables' as *;
+
+.add-todo-form {
+  flex: 1 1 auto;
+  display: flex;
+  gap: 8px;
+  height: 100%;
+  flex-wrap: wrap;
+  min-width: 0;
+
+  @include media-max($breakpoint-mobile) {
+    flex-direction: column;
+  }
+
+  &__button-create {
+    @include buttonBase(var(--color-blue-dark));
+    flex-shrink: 1;
+    white-space: normal;
+    word-break: break-word;
+
+    @include media-max($breakpoint-mobile) {
+      width: 100%;
+    }
+  }
+
+  &__input-create {
+    flex: 1 1 0;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+}
+
+
+
+

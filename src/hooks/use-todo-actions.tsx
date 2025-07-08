@@ -1,21 +1,20 @@
-import { useDispatch } from 'react-redux';
-import type { AppDispatch } from '@src/redux/store';
 import type { TodoI } from '@src/types';
 import {
 	addTodoRequest,
 	deleteTodoRequest,
 	updateTodoRequest,
-} from '@src/redux/actions';
+} from '@src/redux/actions/actions';
+import { useAppDispatch } from '@src/redux/hooks';
 
 export const useTodoActions = () => {
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 
-	const addTodo = (title: string) => dispatch(addTodoRequest(title));
+	const addTodo = (title: string) => dispatch(addTodoRequest({ title }));
 
 	const updateTodo = (id: string, updatedFields: Partial<TodoI>) =>
-		dispatch(updateTodoRequest(id, updatedFields));
+		dispatch(updateTodoRequest({ id, updatedFields }));
 
-	const deleteTodo = (id: string) => dispatch(deleteTodoRequest(id));
+	const deleteTodo = (id: string) => dispatch(deleteTodoRequest({ id }));
 
 	return {
 		addTodo,

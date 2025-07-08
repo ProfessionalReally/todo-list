@@ -11,24 +11,25 @@ import { useModal } from '@src/hooks/use-modal';
 import { Spinner } from '@src/components/ui/spinner';
 import { useTodoCard } from '@src/hooks/use-todo-card';
 import { useTodoActions } from '@src/hooks/use-todo-actions';
+import { REQUEST_TIMEOUT } from '@src/constants';
 
 const TodoPage = () => {
 	const { id } = useParams<string>();
 	const navigate = useNavigate();
 
-	const { todo, isLoading, error, isTimeout } = useTodoCard(id!);
+	const { todo, isLoading, error } = useTodoCard(id!);
 
 	useEffect(() => {
 		if (!id) {
 			navigate('/404');
 			return;
 		}
-		if (isTimeout) {
+		if (error === REQUEST_TIMEOUT) {
 			navigate('/load-error');
 		} else if (error && !todo) {
 			navigate('/404');
 		}
-	}, [id, isTimeout, error, todo, navigate]);
+	}, [id, error, todo, navigate]);
 
 	const { updateTodo, deleteTodo } = useTodoActions();
 
@@ -72,7 +73,7 @@ const TodoPage = () => {
 		<>
 			<div className={'todo-page'}>
 				<Header />
-				{isLoading && <Spinner />}
+				{isLoading && <Spinner fullScreen size={100} />}
 				<div className={'todo-page__content'}>
 					<button
 						className={'todo-page__back-button'}

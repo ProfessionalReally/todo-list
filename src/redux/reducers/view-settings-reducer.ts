@@ -1,12 +1,11 @@
-import type { ViewSettingsActions } from '@src/redux/types';
-import * as actions from '@src/redux/types';
 import {
 	type FilterT,
-	FILTER_OPTIONS,
 	type QueryT,
 	type SortT,
+	FILTER_OPTIONS,
 	SORT_OPTIONS,
 } from '@src/types';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 type ViewSettingsState = {
 	query: QueryT;
@@ -20,31 +19,28 @@ const initialStateViewSettings: ViewSettingsState = {
 	filter: FILTER_OPTIONS.all,
 };
 
-export const viewSettingsReducer = (
-	state: ViewSettingsState = initialStateViewSettings,
-	action: ViewSettingsActions,
-): ViewSettingsState => {
-	switch (action.type) {
-		case actions.SET_QUERY:
-			return {
-				...state,
-				query: action.payload,
-			};
-		case actions.SET_FILTER:
-			return {
-				...state,
-				filter: action.payload,
-			};
-		case actions.TOGGLE_SORT:
-			let newSort = state.sort;
-			if (newSort === SORT_OPTIONS.none) newSort = SORT_OPTIONS.asc;
-			else if (newSort === SORT_OPTIONS.asc) newSort = SORT_OPTIONS.desc;
-			else newSort = SORT_OPTIONS.none;
-			return {
-				...state,
-				sort: newSort,
-			};
-		default:
-			return state;
-	}
+const toggleSort = (sort: any) => {
+	if (sort === SORT_OPTIONS.none) return SORT_OPTIONS.asc;
+	else if (sort === SORT_OPTIONS.asc) return SORT_OPTIONS.desc;
+	return SORT_OPTIONS.none;
 };
+
+const ViewSettingsSlice = createSlice({
+	name: 'viewSettings',
+	initialState: initialStateViewSettings,
+	reducers: {
+		setQueryAction(state, action: PayloadAction<QueryT>) {
+			state.query = action.payload;
+		},
+		setFilterAction(state, action: PayloadAction<FilterT>) {
+			state.filter = action.payload;
+		},
+		toggleSortAction(state) {
+			state.sort = toggleSort(state.sort);
+		},
+	},
+});
+
+export const { setQueryAction, setFilterAction, toggleSortAction } =
+	ViewSettingsSlice.actions;
+export const viewSettingsReducer = ViewSettingsSlice.reducer;

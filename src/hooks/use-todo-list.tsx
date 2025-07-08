@@ -1,24 +1,21 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import {
 	selectFilteredSortedTodos,
 	selectTodoList,
 } from '@src/redux/selectors';
-import { fetchTodos } from '@src/redux/actions';
-import type { AppDispatch } from '@src/redux/store';
+import { useAppSelector } from '@src/redux/hooks';
 
 export const useTodoList = () => {
-	const dispatch = useDispatch<AppDispatch>();
-	const { isLoading, error } = useSelector(selectTodoList);
-	const todos = useSelector(selectFilteredSortedTodos);
-
-	useEffect(() => {
-		dispatch(fetchTodos());
-	}, [dispatch]);
+	const { fetch, add, update } = useAppSelector(selectTodoList);
+	const todos = useAppSelector(selectFilteredSortedTodos);
 
 	return {
 		todos,
-		isLoading,
-		error,
+		isLoading: fetch.isLoading,
+		error: fetch.error,
+		isAdding: add.isLoading,
+		errorAdding: add.error,
+		isUpdating: update.isLoading,
+		errorUpdating: update.error,
+		idUpdate: update.id,
 	};
 };

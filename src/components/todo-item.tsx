@@ -4,13 +4,15 @@ import React, { memo, useCallback } from 'react';
 import type { TodoI } from '@src/types';
 import { Link } from 'react-router-dom';
 import { useTodoActions } from '@src/hooks/use-todo-actions';
+import { Spinner } from '@src/components/ui/spinner';
 
 type TodoItemProps = {
 	todo: TodoI;
+	isUpdating?: boolean;
 };
 
 export const TodoItem: React.FC<TodoItemProps> = memo(
-	({ todo }) => {
+	({ todo, isUpdating }) => {
 		const { updateTodo } = useTodoActions();
 
 		const onToggleCompleted = useCallback(() => {
@@ -23,6 +25,7 @@ export const TodoItem: React.FC<TodoItemProps> = memo(
 					id={todo.id}
 					onChange={onToggleCompleted}
 					checked={todo.completed}
+					disabled={isUpdating}
 				/>
 				<Link
 					to={`/todo/${todo.id}`}
@@ -30,6 +33,9 @@ export const TodoItem: React.FC<TodoItemProps> = memo(
 				>
 					{todo.title}
 				</Link>
+				<div className={'todo-list__item__spinner-placeholder'}>
+					{isUpdating && <Spinner size={20} />}
+				</div>
 			</li>
 		);
 	},
@@ -37,7 +43,8 @@ export const TodoItem: React.FC<TodoItemProps> = memo(
 		return (
 			prev.todo.id === next.todo.id &&
 			prev.todo.title === next.todo.title &&
-			prev.todo.completed === next.todo.completed
+			prev.todo.completed === next.todo.completed &&
+			prev.isUpdating === next.isUpdating
 		);
 	},
 );
